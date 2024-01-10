@@ -74,13 +74,6 @@ contract PokeCoin {
         return true;
     }
 
-    function buyItem(address pokedexAddress, uint itemId) public {
-        Pokedex pokedex = Pokedex(pokedexAddress);
-        uint price = pokedex.getItemPrice(itemId);
-        transfer(pokedexAddress, price);
-        pokedex.addItemToOwner(msg.sender, itemId);
-    }
-
     // events
     event Transfer(address indexed _from, address indexed _to, uint256 _value);
     event Approval(
