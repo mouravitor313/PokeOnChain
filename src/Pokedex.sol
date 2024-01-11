@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Unlicense
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -42,11 +42,17 @@ contract Pokedex is ERC721 {
     }
 
     function random(uint256 _min, uint256 _max) internal view returns(uint256) {
-        return uint256(keccak256(abi.encodedPacked(blockhash(block.number - 1), msg.sender))) % _max;
+        using Math for uint256;
+        uint256 diff = _max - _min;
+        bytes32 hash = keccak256(abi.encodePacked(blockhash(block.number - 1), msg.sender));
+        uint256 number = uint256(hash);
+        uint256 remainder = number.mod(diff);
+        uint256 result = remainder + _min;
+        return result;
     }
 
     function generateRarity() internal view returns (rarityType) {
-        uint256 randomNumber = random(100);
+        uint256 randomNumber = random(0, 100);
         uint256 normalLimit = 70;
         uint256 rareLimit = 90;
 
@@ -72,9 +78,14 @@ contract Pokedex is ERC721 {
             name: _name,
             tipo: _type,
             rarity: _rarity,
-            level: random(4)
-            hp: random
-        })
+            level: random(2,6),
+            hp: random(10,21),
+            attack: random(0,5),
+            defense: random(0,5)
+        });
+
+        uint256 newTokenId = tokenCounter;
+        
 
     }
 
