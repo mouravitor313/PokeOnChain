@@ -36,7 +36,7 @@ contract Pokedex is ERC721 {
     event PokemonCreated(uint256 tokenId, Pokemon pokemon);
 
     constructor() ERC721("Pokedex", "DEX") {
-        pokeCoin = ...; // endereço da pokecoin
+        pokeCoin = ...; // endereço da pokecoin, tem que deployar...
         price = 1;
         tokenCounter = 0;
     }
@@ -56,7 +56,7 @@ contract Pokedex is ERC721 {
         uint256 normalLimit = 70;
         uint256 rareLimit = 90;
 
-        if (randomNumber < rareLimit) {
+        if (randomNumber < normalLimit) {
             return rarityType.normal;
         } else if (randomNumber < rareLimit) {
             return rarityType.rare;
@@ -85,7 +85,11 @@ contract Pokedex is ERC721 {
         });
 
         uint256 newTokenId = tokenCounter;
-        
+        tokenCounter++;
+        _safeMint(msg.sender, newTokenId);
+        pokemons[newTokenId] = newPokemon;
+
+        emit PokemonCreated(newTokenId, newPokemon);
 
     }
 

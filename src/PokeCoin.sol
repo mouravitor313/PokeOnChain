@@ -3,12 +3,7 @@
 pragma solidity ^0.8.0;
 
 contract PokeCoin {
-    // melhorias pendentes:
-    // opção para comprar itens
-    // taxa para batalhas
-    // recompensa pós batalhar
 
-    // variaveis de evento
     string public name = "PokeCoin";
     string public symbol = "PKC";
     uint8 public decimals = 2;
