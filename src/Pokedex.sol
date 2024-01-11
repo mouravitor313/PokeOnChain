@@ -41,7 +41,10 @@ contract Pokedex is ERC721 {
         tokenCounter = 0;
     }
 
-    function random(uint256 _min, uint256 _max) internal view returns(uint256) {
+    function random(
+        uint256 _min,
+        uint256 _max
+        ) internal view returns(uint256) {
         using Math for uint256;
         uint256 diff = _max - _min;
         bytes32 hash = keccak256(abi.encodePacked(blockhash(block.number - 1), msg.sender));

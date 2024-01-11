@@ -36,6 +36,7 @@ contract PokeCoin {
         uint256 _value
     ) public returns (bool success) {
         require(_spender != address(0));
+        require(balanceOf[_spender] >= _value);
         allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
@@ -58,10 +59,11 @@ contract PokeCoin {
         address _to,
         uint256 _value
     ) public returns (bool success) {
-        require(allowance[_from][msg.sender] >= _value);
-        require(balanceOf[_from] >= _value);
-        require(_from != address(0));
-        require(_to != address(0));
+        require(allowance[_from][msg.sender] >= _value, "Insufficient allowance");
+        require(balanceOf[_from] >= _value, "Insufficient balance");
+        require(_from != address(0), "Invalid from address");
+        require(_to != address(0), "Invalid to address");
+
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
         allowance[_from][msg.sender] -= _value;
