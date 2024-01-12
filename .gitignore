@@ -16,4 +16,6 @@ docs/
 notes.txt
 Battles.sol
 VRFv2DirectFundingConsumer.sol
+account.txt
 PokeOnChain/
+utils/
