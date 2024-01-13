@@ -3,24 +3,38 @@ import json
 from web3 import Web3
 
 # variables
-with open("utils/abi.json", "r") as f:
-  abi = json.load(f)
-
 with open("account.txt", "r") as account:
   account_address = account.readline().strip()
   private_key = account.readline().strip()
 
+with open("utils/pokedex_abi.json", "r") as file:
+  pokedex_abi = json.load(file)
+
+with open("utils/pokecoin_abi.json", "r") as file2:
+  pokecoin_abi = json.load(file2)
+
 pokedex_address = '0xe6b211733cff82a3a421a5d66fb73191f390c524'
-contract = web3.eth.contract(address=Web3.to_checksum_address(pokedex_address), abi=abi)
+pokedex_contract = web3.eth.contract(address=Web3.to_checksum_address(pokedex_address), abi=pokedex_abi)
+pokecoin_address = '0x9569C596E84Dd1983C8164c989664cDb49c42c2B'
+pokecoin_contract = web3.eth.contract(address=pokecoin_address, abi=pokecoin_abi)
+gas_limit = 100000
 
 # interaction with function
-tx_hash = contract.functions.createPokemon("Charmander", 1).transact({'from': account_address, 'privateKey': private_key})
+raw_tx = {
+  'nonce': web3.eth.get_transaction_count(account_address),
+  'gasPrice': web3.eth.gas_price,
+  'gas': gas_limit,
+  'to': Web3.to_checksum_address(pokedex_address),
+  'value': 0,
+  'data': pokecoin_contract.functions.approve(Web3.to_checksum_address(pokedex_address), 100).build_transaction({
+  'from': account_address})['data']
+}
 
-#events
-event_filter = contract.events.PokemonCreated.createFilter(fromBlock='latest')
-events = event_filter.get_all_entries()
-for event in events:
-  print(event)
+signed_tx = web3.eth.account.signTransaction(raw_tx, private_key)
+tx_hash = web3.eth.sendRawTransaction(signed_tx.rawTransaction)
+print(tx_hash.hex())
+
+
 
 
 '''
